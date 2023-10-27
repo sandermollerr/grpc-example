@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "grpc"
+version = "0.1.0"
+description = ""
+authors = ["Sander Möller <sander.mollerr@gmail.com>"]
+packages = [
+    { include = "ns", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "3.12"
+grpcio = "^1.59.0"
+
+[tool.poetry.group.dev.dependencies]
+grpcio-tools = "^1.59.0"
+poethepoet = "^0.24.1"
+
+[tool.poe.tasks]
+gen-proto = "python -m grpc_tools.protoc -I src --python_out=src --grpc_python_out=src src/ns/grpc/protobufs/lang_detection/lang-detection.proto"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = ""
+authors = ["Sander Möller <sander.mollerr@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12"
+fastapi = "^0.104.0"
+uvicorn = "^0.23.2"
+gunicorn = "^21.2.0"
+grpcio = "^1.59.0"
+grpc = {path = "../../libraries/grpc"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+grpcio-tools = "^1.59.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

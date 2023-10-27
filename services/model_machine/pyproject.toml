@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "model-machine"
+version = "0.1.0"
+description = ""
+authors = ["Sander Möller <sander.mollerr@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12"
+grpcio = "^1.59.0"
+fasttext = {git = "https://github.com/cfculhane/fastText"}
+grpc = {path = "../../libraries/grpc"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+grpcio-tools = "^1.59.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

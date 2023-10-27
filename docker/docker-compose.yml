@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  api:
+    networks:
+      - grpc-model-example
+    build:
+      context: ../
+      dockerfile: "services/api/Dockerfile"
+    ports:
+      - "8080:80"
+    depends_on:
+      model_machine:
+        condition: service_started
+
+  model_machine: 
+    networks:
+      - grpc-model-example
+    build:
+      context: ../
+      dockerfile: "services/model_machine/Dockerfile"
+    environment:
+      - GRPC_VERBOSITY=INFO
+    ports:
+      - "50051:50051"
+
+volumes:
+  exports:
+networks:
+  grpc-model-example:
+ 

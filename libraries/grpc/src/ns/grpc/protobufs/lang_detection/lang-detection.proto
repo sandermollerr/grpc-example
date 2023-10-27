@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message LangModelRequest {
+    string text = 1;
+    int32 max_results = 2;
+}
+
+message LangModelResult {
+    string lang = 1;
+    float score = 2;
+}
+
+message LangModelResponse {
+    repeated LangModelResult results = 1;
+}
+
+service LanguageDetector {
+    rpc detect (LangModelRequest) returns (LangModelResponse);
+}
+
