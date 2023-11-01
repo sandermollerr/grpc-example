@@ -1,3 +1,10 @@
+from concurrent import futures
+from pathlib import Path
+import logging
+from ns.logging.config import apply_logging_config
+
+import grpc
+from fasttext import FastText, load_model
 from ns.grpc.protobufs.lang_detection.lang_detection_pb2 import (
     LangModelResponse,
     LangModelResult,
@@ -7,20 +14,18 @@ from ns.grpc.protobufs.lang_detection.lang_detection_pb2_grpc import (
     LanguageDetectorServicer,
     add_LanguageDetectorServicer_to_server,
 )
-from fasttext import FastText, load_model
-from pathlib import Path
-from concurrent import futures
-import grpc
 
-model_path = Path("../resources/lang-detection.ft")
+apply_logging_config()
+logger = logging.getLogger(__name__)
+model_path = Path(Path(__file__).parent.resolve(), "../resources/lang-detection.ft")
 model: FastText = load_model(model_path.as_posix())
 
 
 class LanguageDetectorService(LanguageDetectorServicer):
     def detect(self, request: LangModelRequest, context):
-        print(f'get model prediction for "{request.text}"')
+        logger.info('get model prediction for "%s"', request.text)
         predictions, scores = model.predict(request.text, k=request.max_results)
-        print(f"found {len(predictions)} predictions")
+        logger.info("found %s predictions", len(predictions))
 
         results: list[LangModelResult] = []
         for prediction, score in zip(predictions, scores):
@@ -30,13 +35,12 @@ class LanguageDetectorService(LanguageDetectorServicer):
             results.append(result)
 
         languages = [result.lang for result in results]
-        print(f"returning predictions: {languages}")
+        logger.info("returning predictions: %s", languages)
 
         return LangModelResponse(results=results)
 
 
 def serve():
-    print("hi")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_LanguageDetectorServicer_to_server(LanguageDetectorService(), server)
     server.add_insecure_port("0.0.0.0:50051")

@@ -29,6 +29,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 
 WORKDIR $PYSETUP_PATH
 COPY libraries/grpc /libraries/grpc
+COPY libraries/logging /libraries/logging
 COPY services/api/poetry.lock ./
 COPY services/api/pyproject.toml  ./
 
@@ -40,6 +41,7 @@ RUN poetry install
 ###############################################
 FROM base as runtime
 
+WORKDIR $PYSETUP_PATH
 COPY --from=build $PYSETUP_PATH $PYSETUP_PATH
 COPY services/api/src/ ./src
 

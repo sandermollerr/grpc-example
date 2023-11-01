@@ -24,13 +24,12 @@ ENV PYTHONPATH="$PYSETUP_PATH"
 ###############################################
 FROM base as build
 
-#RUN add-apt-repository ppa:deadsnakes/ppa
-#RUN apt-get update && apt-get -y install musl-dev curl build-essential python-dev3.12
 RUN apt-get update && apt-get -y install musl-dev curl build-essential
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 WORKDIR $PYSETUP_PATH
 COPY libraries/grpc /libraries/grpc
+COPY libraries/logging /libraries/logging
 COPY services/model_machine/poetry.lock ./
 COPY services/model_machine/pyproject.toml  ./
 
@@ -42,11 +41,12 @@ RUN poetry install
 ###############################################
 FROM base as runtime
 
+WORKDIR $PYSETUP_PATH
 COPY --from=build $PYSETUP_PATH $PYSETUP_PATH
 COPY services/model_machine/src ./src
 COPY services/model_machine/resources ./resources
 
 ENTRYPOINT ["python"]
-CMD ["src/main.py"]
+CMD ["-m", "src.main"]
 
 

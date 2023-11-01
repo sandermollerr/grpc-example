@@ -1,3 +1,5 @@
+from ns.logging.config import LOGGING_CONFIG, setup_exception_logging_hook
+
 # Define application module path
 wsgi_app = "src.main:app"
 
@@ -16,3 +18,6 @@ preload_app = True
 # Write application logs to stdout
 accesslog = "-"
 errorlog = "-"
+
+logconfig_dict = LOGGING_CONFIG
+setup_exception_logging_hook()
